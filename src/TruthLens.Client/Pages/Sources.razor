@@ -1,0 +1,79 @@
+@page "/sources"
+@inject TruthLensApiClient Api
+
+<PageTitle>TruthLens - Source Reputation</PageTitle>
+
+<h1>Source reputation lookup</h1>
+<p class="lead">Look up how a domain is categorized in our reputation directory.</p>
+
+<div class="input-group mb-4" style="max-width: 480px;">
+    <input class="form-control" @bind="domain" @bind:event="oninput" placeholder="e.g. reuters.com" />
+    <button class="btn btn-primary" @onclick="Lookup" disabled="@string.IsNullOrWhiteSpace(domain)">Look up</button>
+</div>
+
+@if (lookupResult is not null)
+{
+    <div class="card mb-4" style="max-width: 480px;">
+        <div class="card-body">
+            <h5>@lookupResult.Name</h5>
+            <span class="badge @BadgeClass(lookupResult.Category)">@lookupResult.Category</span>
+            <p class="mt-2 mb-0">@lookupResult.Notes</p>
+        </div>
+    </div>
+}
+
+<h4 class="mt-4">Full directory</h4>
+@if (allSources is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in allSources)
+            {
+                <tr>
+                    <td>@s.Domain</td>
+                    <td>@s.Name</td>
+                    <td><span class="badge @BadgeClass(s.Category)">@s.Category</span></td>
+                    <td>@s.Notes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private string domain = string.Empty;
+    private SourceReputation? lookupResult;
+    private List<SourceReputation>? allSources;
+
+    protected override async Task OnInitializedAsync()
+    {
+        allSources = await Api.GetAllSourcesAsync();
+    }
+
+    private async Task Lookup()
+    {
+        lookupResult = await Api.LookupSourceAsync(domain);
+    }
+
+    private static string BadgeClass(string category) => category switch
+    {
+        "HighReputation" => "bg-success",
+        "GovernmentOrHealthAuthority" => "bg-primary",
+        "Mixed" => "bg-warning text-dark",
+        "Satire" => "bg-info text-dark",
+        "LowReputation" => "bg-danger",
+        _ => "bg-secondary",
+    };
+}

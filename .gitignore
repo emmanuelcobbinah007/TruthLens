@@ -1,0 +1,16 @@
+## .NET
+bin/
+obj/
+*.user
+*.db
+*.db-shm
+*.db-wal
+
+## VS / Rider
+.vs/
+.idea/
+*.suo
+
+## OS
+.DS_Store
+Thumbs.db

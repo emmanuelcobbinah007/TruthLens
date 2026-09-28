@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0DF399C9-11E4-4D57-A297-CE6B2189A197}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TruthLens.Shared", "src\TruthLens.Shared\TruthLens.Shared.csproj", "{0255EC95-B824-4B4D-85D2-6B2F1B34C647}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TruthLens.Api", "src\TruthLens.Api\TruthLens.Api.csproj", "{90E9F986-B81F-4A43-9DB7-143776128BF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TruthLens.Client", "src\TruthLens.Client\TruthLens.Client.csproj", "{CCDD7C98-8565-4F36-995A-6BBDF33F9A4F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0255EC95-B824-4B4D-85D2-6B2F1B34C647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0255EC95-B824-4B4D-85D2-6B2F1B34C647}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0255EC95-B824-4B4D-85D2-6B2F1B34C647}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0255EC95-B824-4B4D-85D2-6B2F1B34C647}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90E9F986-B81F-4A43-9DB7-143776128BF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90E9F986-B81F-4A43-9DB7-143776128BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90E9F986-B81F-4A43-9DB7-143776128BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90E9F986-B81F-4A43-9DB7-143776128BF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCDD7C98-8565-4F36-995A-6BBDF33F9A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCDD7C98-8565-4F36-995A-6BBDF33F9A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCDD7C98-8565-4F36-995A-6BBDF33F9A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCDD7C98-8565-4F36-995A-6BBDF33F9A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0255EC95-B824-4B4D-85D2-6B2F1B34C647} = {0DF399C9-11E4-4D57-A297-CE6B2189A197}
+		{90E9F986-B81F-4A43-9DB7-143776128BF8} = {0DF399C9-11E4-4D57-A297-CE6B2189A197}
+		{CCDD7C98-8565-4F36-995A-6BBDF33F9A4F} = {0DF399C9-11E4-4D57-A297-CE6B2189A197}
+	EndGlobalSection
+EndGlobal

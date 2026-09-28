@@ -1,0 +1,171 @@
+@page "/"
+@inject TruthLensApiClient Api
+
+<PageTitle>TruthLens - Claim Checker</PageTitle>
+
+<h1>TruthLens</h1>
+<p class="lead">Paste a viral claim or headline to get a credibility signal and source context.</p>
+
+<div class="mb-3">
+    <label class="form-label" for="claimText">Claim or headline</label>
+    <textarea id="claimText" class="form-control" rows="4" @bind="claimText"
+              placeholder="e.g. &quot;5G towers cause COVID-19&quot;"></textarea>
+</div>
+
+<div class="mb-3">
+    <label class="form-label" for="sourceDomain">Source domain (optional)</label>
+    <input id="sourceDomain" class="form-control" @bind="sourceDomain" placeholder="e.g. reuters.com" />
+</div>
+
+<button class="btn btn-primary" @onclick="CheckClaim" disabled="@(isChecking || string.IsNullOrWhiteSpace(claimText))">
+    @(isChecking ? "Checking..." : "Check claim")
+</button>
+
+@if (errorMessage is not null)
+{
+    <div class="alert alert-danger mt-3">@errorMessage</div>
+}
+
+@if (result is not null)
+{
+    <div class="card mt-4">
+        <div class="card-body">
+            <span class="badge @BadgeClass(result.Label) fs-6 mb-2">@FriendlyLabel(result.Label)</span>
+            <span class="text-muted ms-2">confidence: @($"{result.Confidence:P0}")</span>
+
+            <p class="mt-3">@result.Explanation</p>
+
+            <h6>Class scores</h6>
+            <ul class="list-unstyled">
+                @foreach (var kv in result.ClassScores.OrderByDescending(kv => kv.Value))
+                {
+                    <li>
+                        @FriendlyLabel(kv.Key)
+                        <div class="progress" role="progressbar" style="height: 8px;">
+                            <div class="progress-bar @BadgeClass(kv.Key)" style="width:@($"{kv.Value:P0}")"></div>
+                        </div>
+                    </li>
+                }
+            </ul>
+
+            @if (result.SourceContext is not null)
+            {
+                <hr />
+                <h6>Source context: @result.SourceContext.Name</h6>
+                <span class="badge @SourceBadgeClass(result.SourceContext.Category)">@result.SourceContext.Category</span>
+                <p class="mt-2 mb-0">@result.SourceContext.Notes</p>
+            }
+
+            <div class="mt-3">
+                <button class="btn btn-outline-danger btn-sm" @onclick="() => ShowFlagForm()">
+                    Flag this claim
+                </button>
+            </div>
+
+            @if (showFlagForm)
+            {
+                <div class="mt-3 border rounded p-3">
+                    <label class="form-label" for="flagReason">Reason</label>
+                    <select id="flagReason" class="form-select mb-2" @bind="flagReason">
+                        <option value="StillCirculating">Still circulating / recently seen</option>
+                        <option value="AlreadyDebunked">Already debunked elsewhere</option>
+                        <option value="MisleadingContext">Misleading context, not outright false</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <textarea class="form-control mb-2" rows="2" placeholder="Optional note" @bind="flagNote"></textarea>
+                    <button class="btn btn-danger btn-sm" @onclick="SubmitFlag" disabled="@isFlagging">
+                        @(isFlagging ? "Submitting..." : "Submit flag")
+                    </button>
+                    @if (flagSubmitted)
+                    {
+                        <span class="text-success ms-2">Thanks — recorded.</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private string claimText = string.Empty;
+    private string sourceDomain = string.Empty;
+    private bool isChecking;
+    private string? errorMessage;
+    private ClaimCheckResult? result;
+
+    private bool showFlagForm;
+    private string flagReason = "StillCirculating";
+    private string? flagNote;
+    private bool isFlagging;
+    private bool flagSubmitted;
+
+    private async Task CheckClaim()
+    {
+        isChecking = true;
+        errorMessage = null;
+        result = null;
+        showFlagForm = false;
+        flagSubmitted = false;
+        StateHasChanged();
+
+        try
+        {
+            result = await Api.CheckClaimAsync(claimText, string.IsNullOrWhiteSpace(sourceDomain) ? null : sourceDomain);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Couldn't reach the TruthLens API: {ex.Message}";
+        }
+        finally
+        {
+            isChecking = false;
+        }
+    }
+
+    private void ShowFlagForm() => showFlagForm = true;
+
+    private async Task SubmitFlag()
+    {
+        if (result is null) return;
+        isFlagging = true;
+        try
+        {
+            await Api.FlagClaimAsync(result.ClaimText, flagReason, flagNote);
+            flagSubmitted = true;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Couldn't submit the flag: {ex.Message}";
+        }
+        finally
+        {
+            isFlagging = false;
+        }
+    }
+
+    private static string FriendlyLabel(string label) => label switch
+    {
+        "Credible" => "Credible",
+        "Uncertain" => "Uncertain",
+        "LikelyMisinformation" => "Likely misinformation",
+        _ => label,
+    };
+
+    private static string BadgeClass(string label) => label switch
+    {
+        "Credible" => "bg-success",
+        "Uncertain" => "bg-warning text-dark",
+        "LikelyMisinformation" => "bg-danger",
+        _ => "bg-secondary",
+    };
+
+    private static string SourceBadgeClass(string category) => category switch
+    {
+        "HighReputation" => "bg-success",
+        "GovernmentOrHealthAuthority" => "bg-primary",
+        "Mixed" => "bg-warning text-dark",
+        "Satire" => "bg-info text-dark",
+        "LowReputation" => "bg-danger",
+        _ => "bg-secondary",
+    };
+}

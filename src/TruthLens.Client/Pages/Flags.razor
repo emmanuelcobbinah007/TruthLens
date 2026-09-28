@@ -1,0 +1,53 @@
+@page "/flags"
+@inject TruthLensApiClient Api
+
+<PageTitle>TruthLens - Community Flags</PageTitle>
+
+<h1>Community-flagged claims</h1>
+<p class="lead">Claims the community has flagged as still circulating, already debunked, or misleading — sorted by most recent activity.</p>
+
+@if (flags is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (flags.Count == 0)
+{
+    <p><em>No claims have been flagged yet. Flag one from the claim checker to see it here.</em></p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Claim</th>
+                <th>Flag count</th>
+                <th>Reasons</th>
+                <th>Last flagged (UTC)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var f in flags)
+            {
+                <tr>
+                    <td>@f.ClaimText</td>
+                    <td><span class="badge bg-secondary">@f.FlagCount</span></td>
+                    <td>@string.Join(", ", f.Reasons)</td>
+                    <td>@f.LastFlaggedUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<button class="btn btn-outline-secondary btn-sm" @onclick="Reload">Refresh</button>
+
+@code {
+    private List<FlaggedClaimSummary>? flags;
+
+    protected override async Task OnInitializedAsync() => await Reload();
+
+    private async Task Reload()
+    {
+        flags = await Api.GetFlaggedClaimsAsync();
+    }
+}
