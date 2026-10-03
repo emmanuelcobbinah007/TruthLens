@@ -23,7 +23,11 @@
 }
 
 <h4 class="mt-4">Full directory</h4>
-@if (allSources is null)
+@if (loadError is not null)
+{
+    <div class="alert alert-danger">@loadError</div>
+}
+else if (allSources is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -56,15 +60,30 @@ else
     private string domain = string.Empty;
     private SourceReputation? lookupResult;
     private List<SourceReputation>? allSources;
+    private string? loadError;
 
     protected override async Task OnInitializedAsync()
     {
-        allSources = await Api.GetAllSourcesAsync();
+        try
+        {
+            allSources = await Api.GetAllSourcesAsync();
+        }
+        catch (Exception ex)
+        {
+            loadError = $"Couldn't load the source directory: {ex.Message}";
+        }
     }
 
     private async Task Lookup()
     {
-        lookupResult = await Api.LookupSourceAsync(domain);
+        try
+        {
+            lookupResult = await Api.LookupSourceAsync(domain);
+        }
+        catch (Exception ex)
+        {
+            loadError = $"Couldn't look up that domain: {ex.Message}";
+        }
     }
 
     private static string BadgeClass(string category) => category switch

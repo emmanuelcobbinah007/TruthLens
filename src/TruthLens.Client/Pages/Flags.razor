@@ -6,7 +6,11 @@
 <h1>Community-flagged claims</h1>
 <p class="lead">Claims the community has flagged as still circulating, already debunked, or misleading — sorted by most recent activity.</p>
 
-@if (flags is null)
+@if (loadError is not null)
+{
+    <div class="alert alert-danger">@loadError</div>
+}
+else if (flags is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -43,11 +47,20 @@ else
 
 @code {
     private List<FlaggedClaimSummary>? flags;
+    private string? loadError;
 
     protected override async Task OnInitializedAsync() => await Reload();
 
     private async Task Reload()
     {
-        flags = await Api.GetFlaggedClaimsAsync();
+        try
+        {
+            flags = await Api.GetFlaggedClaimsAsync();
+            loadError = null;
+        }
+        catch (Exception ex)
+        {
+            loadError = $"Couldn't load flagged claims: {ex.Message}";
+        }
     }
 }
