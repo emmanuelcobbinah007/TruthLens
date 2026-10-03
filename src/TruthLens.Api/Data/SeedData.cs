@@ -1,37 +1,63 @@
 namespace TruthLens.Api.Data;
 
 /// <summary>
-/// Starter source-reputation directory. Real, widely-recognized wire services, science
-/// journals and health authorities are included because their category is not seriously
-/// contested. A few ".example" domains are added to demonstrate the "Mixed" and
-/// "LowReputation" categories without making a contestable real-world judgment call about
-/// an actual outlet — replace/extend this table with your own curated sources.
+/// Starter source-reputation directory, localized for Ghana. Ghanaian government and health
+/// bodies, the national news agency and the main fact-checking initiatives are included.
+/// The categories for individual Ghanaian news outlets are judgment calls and should be
+/// reviewed by the team before submission. A few ".example" domains are kept to demonstrate
+/// the "Mixed" and "LowReputation" categories without making a contestable real-world call
+/// about a specific outlet — replace/extend this table with your own curated sources.
 /// </summary>
 public static class SeedData
 {
     public static readonly SourceEntity[] Sources =
     [
+        // --- Ghanaian news outlets ---
+        new() { Domain = "graphic.com.gh", Name = "Graphic Online", Category = "HighReputation",
+            Notes = "Long-running Ghanaian daily newspaper group with a national newsroom." },
+        new() { Domain = "citinewsroom.com", Name = "Citi Newsroom", Category = "HighReputation",
+            Notes = "Ghanaian digital news outlet with a national newsroom and regular fact-based reporting." },
+        new() { Domain = "myjoyonline.com", Name = "MyJoyOnline (Joy News)", Category = "HighReputation",
+            Notes = "Ghanaian broadcaster's online news platform; mainstream national coverage." },
+        new() { Domain = "gna.org.gh", Name = "Ghana News Agency", Category = "Mixed",
+            Notes = "State-owned national news agency. Factual wire-style reporting, but coverage can reflect official government positions — cross-check contested claims." },
+        new() { Domain = "gbcghanaonline.com", Name = "Ghana Broadcasting Corporation (GBC)", Category = "Mixed",
+            Notes = "State-owned public broadcaster. Reliable for official announcements; cross-check political reporting." },
+        new() { Domain = "ghanaweb.com", Name = "GhanaWeb", Category = "Mixed",
+            Notes = "High-traffic Ghanaian news aggregator and forum mixing wire copy, opinion and user comments — verify claims against the original source." },
+
+        // --- Ghanaian government, health and electoral authorities ---
+        new() { Domain = "ghs.gov.gh", Name = "Ghana Health Service", Category = "GovernmentOrHealthAuthority",
+            Notes = "Ghana's main public health implementing agency; primary source for national health guidance and disease alerts." },
+        new() { Domain = "moh.gov.gh", Name = "Ministry of Health, Ghana", Category = "GovernmentOrHealthAuthority",
+            Notes = "Government ministry responsible for national health policy." },
+        new() { Domain = "fda.gov.gh", Name = "Food and Drugs Authority, Ghana", Category = "GovernmentOrHealthAuthority",
+            Notes = "National regulator for food, drugs and medical products; primary source on product safety and drug alerts." },
+        new() { Domain = "ec.gov.gh", Name = "Electoral Commission of Ghana", Category = "GovernmentOrHealthAuthority",
+            Notes = "Official body that conducts elections and publishes official results; primary source for election information." },
+        new() { Domain = "statsghana.gov.gh", Name = "Ghana Statistical Service", Category = "GovernmentOrHealthAuthority",
+            Notes = "Official national statistics agency; primary source for population and economic figures." },
+
+        // --- Fact-checking initiatives ---
+        new() { Domain = "dubawa.org", Name = "Dubawa", Category = "HighReputation",
+            Notes = "West African fact-checking initiative that verifies viral claims with published methodology." },
+        new() { Domain = "africacheck.org", Name = "Africa Check", Category = "HighReputation",
+            Notes = "Pan-African nonprofit fact-checking organization." },
+
+        // --- International references ---
         new() { Domain = "reuters.com", Name = "Reuters", Category = "HighReputation",
             Notes = "International wire service with a dedicated fact-checking desk." },
-        new() { Domain = "apnews.com", Name = "Associated Press", Category = "HighReputation",
-            Notes = "Nonprofit news cooperative; widely used as a neutral wire source." },
-        new() { Domain = "bbc.com", Name = "BBC News", Category = "HighReputation",
-            Notes = "Publicly funded broadcaster with an editorial standards code." },
-        new() { Domain = "nature.com", Name = "Nature", Category = "HighReputation",
-            Notes = "Peer-reviewed scientific journal." },
         new() { Domain = "who.int", Name = "World Health Organization", Category = "GovernmentOrHealthAuthority",
             Notes = "UN health authority; primary source for global health guidance." },
-        new() { Domain = "cdc.gov", Name = "U.S. Centers for Disease Control and Prevention", Category = "GovernmentOrHealthAuthority",
-            Notes = "U.S. federal public health agency." },
-        new() { Domain = "un.org", Name = "United Nations", Category = "GovernmentOrHealthAuthority",
-            Notes = "Intergovernmental organization; primary source for UN statements." },
+        new() { Domain = "nature.com", Name = "Nature", Category = "HighReputation",
+            Notes = "Peer-reviewed scientific journal." },
         new() { Domain = "theonion.com", Name = "The Onion", Category = "Satire",
             Notes = "Well-known satirical publication — content is not factual reporting." },
-        new() { Domain = "dailyvoicewire.example", Name = "Daily Voice Wire", Category = "Mixed",
+
+        // --- Demo entries for the Mixed / LowReputation categories ---
+        new() { Domain = "accra-daily-voice.example", Name = "Accra Daily Voice", Category = "Mixed",
             Notes = "Demo entry: blends factual reporting with strong editorial opinion — verify claims against a primary source." },
-        new() { Domain = "freedomlivewire.example", Name = "Freedom Live Wire", Category = "Mixed",
-            Notes = "Demo entry: partisan framing common — cross-check factual claims." },
-        new() { Domain = "clickburst-news.example", Name = "ClickBurst News", Category = "LowReputation",
+        new() { Domain = "clickburst-gh.example", Name = "ClickBurst Ghana", Category = "LowReputation",
             Notes = "Demo entry illustrating a low-credibility, engagement-driven content mill." },
         new() { Domain = "viral-health-tips.example", Name = "Viral Health Tips", Category = "LowReputation",
             Notes = "Demo entry illustrating an unverified health-advice content farm." },
