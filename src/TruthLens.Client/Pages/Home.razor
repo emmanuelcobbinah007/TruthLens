@@ -78,7 +78,11 @@
                     </button>
                     @if (flagSubmitted)
                     {
-                        <span class="text-success ms-2">Thanks — recorded.</span>
+                        <div class="alert alert-success mt-2 mb-0 py-2">Thanks — your flag has been recorded.</div>
+                    }
+                    @if (flagError is not null)
+                    {
+                        <div class="alert alert-danger mt-2 mb-0 py-2">@flagError</div>
                     }
                 </div>
             }
@@ -122,20 +126,30 @@
         }
     }
 
-    private void ShowFlagForm() => showFlagForm = true;
+    private string? flagError;
+
+    private void ShowFlagForm()
+    {
+        showFlagForm = true;
+        flagSubmitted = false;
+        flagError = null;
+    }
 
     private async Task SubmitFlag()
     {
         if (result is null) return;
         isFlagging = true;
+        flagSubmitted = false;
+        flagError = null;
         try
         {
             await Api.FlagClaimAsync(result.ClaimText, flagReason, flagNote);
             flagSubmitted = true;
+            flagNote = null;
         }
         catch (Exception ex)
         {
-            errorMessage = $"Couldn't submit the flag: {ex.Message}";
+            flagError = $"Couldn't submit the flag: {ex.Message}";
         }
         finally
         {
