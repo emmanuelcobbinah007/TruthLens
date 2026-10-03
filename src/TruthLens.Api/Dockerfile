@@ -13,6 +13,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
 
+# The .NET runtime image runs as a non-root user, so the SQLite database folder must be writable by it.
+RUN mkdir -p /app/data && chown $APP_UID /app/data
+
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
