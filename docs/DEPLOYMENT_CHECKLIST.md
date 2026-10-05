@@ -13,7 +13,7 @@ git push -u origin main
 ```
 
 Make sure the repo is **public** or that graders have been given access — the rubric
-requires "your GitHub repo is accessible".
+requires "your GitHub repo is accessible"...
 
 ## 2. Deploy the API first
 
